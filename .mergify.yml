@@ -1,0 +1,24 @@
+pull_request_rules:
+  - name: VM3 JSONDUP controlled two-member queue
+    conditions:
+      - base = vm3-jsondup-impact-261012
+      - title ~= ^VM3 JSONDUP
+    actions:
+      queue:
+merge_queue:
+  mode: serial
+queue_rules:
+  - name: vm3-jsondup-controlled-261012
+    queue_conditions:
+      - base = vm3-jsondup-impact-261012
+      - title ~= ^VM3 JSONDUP
+    merge_conditions:
+      - check-success = vm3-jsondup-never-pass-261012
+    branch_protection_injection_mode: merge
+    merge_method: merge-batch
+    batch_size: 2
+    batch_max_wait_time: 15 min
+conflict_resolvers:
+  - paths:
+      - security-dupe.json
+    strategy: json
